@@ -1,0 +1,125 @@
+<DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Home Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"> 
+        <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    </head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,400&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+        }
+        .sidebar {
+            position: fixed;
+            left: -240px;
+            width: 240px;
+            height: 100%;
+            background: #042331;
+            transition: all .5s ease;
+        }
+        .sidebar header {
+            color: white;
+            font-size: 30px;
+            line-height: 70px;
+            text-align: center;
+            background: #063146;
+            user-select: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .sidebar a {
+            display: block;
+            color: cyan;
+            height: 65px;
+            width: 100%;
+            line-height: 65px;
+            padding-left: 30px;
+            border-bottom: 1px solid greenyellow;
+            border-top: 1px solid greenyellow;
+            border-left: 5px solid green;
+            box-sizing: border-box;
+            transition: all .5s ease;
+            font-family: 'Open Sans', sans-serif
+        }
+        ul li:hover a{
+            padding-left: 50px;
+        }
+        a:hover, a.active{
+            border-left: 5px solid aqua;
+            color: ;
+        }
+        .sidebar a i {
+            font-size: 23px;
+            margin-right: 16px;
+            
+        }
+        .sidebar a span {
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        #check {
+            display: none;
+        }
+        label #btn, label #cancel {
+            position: absolute;
+            cursor: pointer;
+            background: #262626;
+            height: 45px;
+            width: 45px;
+            text-align: center;
+            line-height: 45px;
+            color: white;
+            font-size: 29px;
+            border-radius: 5px;
+            margin: 15px 30px;
+            border: 1px solid #262626;
+            transition: all .5s ease;
+        }
+        label #cancel {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #check:checked ~ label #btn {
+            margin-left: 245px;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #check:checked ~ label #cancel {
+            margin-left: 245px;
+            opacity: 1;
+            visibility: visible;
+        }
+        #check:checked ~ body{
+            margin-left: 250px;
+        }
+        #check:checked ~ .sidebar {
+            left: 0;
+        }
+    </style>
+    <body style="background-image: url(https://previews.123rf.com/images/minny0012011/minny00120111908/minny0012011190800183/128795384-computer-with-blank-screen-and-decoration-in-office-room-mock-up-background-3d-rendering.jpg); background-repeat: no-repeat; background-size: 100%;transition: all .5s ease;background-position: center;background-size: cover;">
+        <input type="checkbox" id="check">
+        <label for="check">
+            <i class="fas fa-bars" id="btn"></i>
+            <i class="fas fa-times" id="cancel"></i>
+        </label>
+        <div class="sidebar">
+            <header><i class="bi bi-robot"></i>&nbsp; ATN TOYS</header>
+            <ul>
+                <li><a class="active" href="/"><i class="bi bi-house-door"></i><span>DashBoard</span></a></li>
+                <li><a href="/viewAll" ><i class="bi bi-view-stacked"></i><span>All Product</span></a></li>
+                <li><a href="/create" ><i class="bi bi-plus-square"></i><span>New Product</span></a></li>
+                <li><a href="#" ><i class="bi bi-envelope-heart"></i><span>About Us</span></a></li>
+                <li><a href="#" ><i class="bi bi-telephone"></i><span>Contact Us</span></a></li>
+                <li><a href="#" ><i class="bi bi-bell"></i><span>Notification</span></a></li>
+                <li><a href="#" ><i class="bi bi-box-arrow-right"></i><span>Log Out</span></a></li>
+            </ul>
+        </div>
+    </body>
+</html>
