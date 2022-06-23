@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <title>All Product</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <style>
@@ -30,7 +33,7 @@
             transform: translate(-20%, -490%);
             position: absolute;
             padding: 0px;
-            border-radius: 90px;
+            border-radius: 60px;
             height: 60px;
             border: 1px solid violet;
             transition: 0.5s;
@@ -62,7 +65,7 @@
             transition: 0.5s;
         }
         .search-box:hover .search-text {
-            width: 300px;
+            width: 250px;
             padding: 1px;
         }
         .search-box:hover .button {
@@ -85,6 +88,40 @@
         margin-top: 30px;
         font-family: 'Century';"  class="display-4"><b><i class="bi bi-robot"></i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; All TOYS &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<i class="bi bi-robot"></i></b></h1>
     
+   <nav class="navbar navbar-expand-lg navbar-success bg-green">
+    <form>
+        <li class="nav-item" style="list-style:none; margin-left: 20px">
+            <button class="btn btn-info btn-sm">
+            <a href="/" style="text-decoration: none; font-size: 16px; color:rgb(255, 81, 0); font-weight: bold; text-transform:uppercase;">Back to home</a></button>
+        </li>
+    </form>
+    <form>
+        <li class="nav-item" style="list-style:none; margin-left: 20px">
+            <button class="btn btn-info btn-sm">
+            <a href="/create" style="text-decoration: none; font-size: 16px; color:rgb(255, 81, 0); font-weight: bold; text-transform:uppercase">Add new toy</a></button>
+        </li>
+    </form>
+    <form action="/sortName" method="post" style="list-style:none; margin-left: 20px">
+        <li class="nav-item">
+            <button class="btn btn-info btn-sm" style="color:rgb(255, 81, 0); font-size: 16px; font-weight: bold; text-transform:uppercase" name="txtName">
+            Sort By Name</button>
+        </li>
+    </form>
+     <form action="/ascending" method="post" style="list-style:none; margin-left: 20px">
+        <li class="nav-item">
+            <button class="btn btn-info btn-sm" style="color:rgb(255, 81, 0); font-size: 16px; font-weight: bold; text-transform:uppercase" name="txtPrice">
+            Sort Price Ascending</button>
+        </li>
+    </form>
+    <form action="/decrease" method="post" style="list-style:none; margin-left: 20px">
+        <li class="nav-item">
+            <button class="btn btn-info btn-sm" style="color:rgb(255, 81, 0); font-size: 16px; font-weight: bold; text-transform:uppercase" name="txtPrice">
+            Sort Price Descending</button>
+        </li>
+    </form>
+    </ul>
+  </div>
+</nav>
     <div class="search-box">
         <form action="/search" method="post">
         <input type="text" class="search-text" placeholder="Search product.." name="txtName" required>
@@ -93,17 +130,16 @@
         </div>
         </form>
     </div>
-    
-
-    <button class="btn btn-info btn-sm" style="font-size: 18px; padding: 10px; margin-left: 40px;">
-        <a href="/" style="text-decoration: none; font-size: 20px; color:whitesmoke">Back To Home</a></button>
-    
-    <hr>
+   
+   
+   
+   
+   
     <table class="table table-primary table-bordered border-bold">
         <thead class="thead-dark">
             <tr class="table-primary border-info-bold" style="font-size: 20px; background-color: rgb(255,99,71); color: whitesmoke">
                 <th style="text-align:center" scope="col">TOY Name</th>
-                <th style="text-align:center" scope="col">Price</th>
+                <th style="text-align:center" scope="col">Price ($)</th>
                 <th style="text-align:center" scope="col">Amount</th>
                 <th style="text-align:center" scope="col">Description</th>
                 <th style="text-align:center" scope="col">Image</th>
@@ -115,20 +151,32 @@
             {{#each products}}
                 <tr style="font-size: 20px; color: black; background-color: transparent"></tr>
                     <td style="padding-top: 80px; font-size: 20px;">{{name}}</td>
-                    <td style="text-align:center; padding-top: 80px; font-size: 25px;">{{price}}$</td>
+                    <td style="text-align:center; padding-top: 80px; font-size: 25px;">{{price}}</td>
                     <td style="text-align:center; padding-top: 80px; font-size: 25px;">{{amount}}</td>
                     <td style="padding-top: 80px; margin-right: 100px; font-size: 20px;">{{description}}</td>
-                    <td style="text-align:center"><img src="{{picURL}}" width="300" height="200" /></td>
+                    <td style="text-align:center"><img src="{{picURL}}" width="300" height="300" /></td>
                     <td style="text-align:center; padding-top: 80px"><a type="button" class="btn btn-success btn-sm" style="font-size: 18px; padding: 10px"
                         ><b>EDIT</b></a>
                     </td>
                     <td style="text-align:center; padding-top: 80px">
-                        <a type="button" class="btn btn-danger btn-sm" style="font-size: 18px; padding: 10px">
+                        <a href="/delete?id={{_id}}" onclick="return confirm('Are you sure delete TOY : {{name}}')" type="button" class="btn btn-danger btn-sm" style="font-size: 18px; padding: 10px">
                         <b>DELETE</b></a>
                     </td>
                 </tr>
             {{/each}}
         </tbody>
     </table>
+    <button class="btn btn-info btn-sm" style="margin-left: 550px; margin-bottom: 50px; margin-top: 30px; background: linear-gradient(to right, rgb(0, 249, 216) 0%, rgb(24, 176, 247) 100%)">
+        <a href="/viewAll?page=1" 
+        style="text-decoration: none; color:rgb(132, 0, 255); font-size: 20px; font-weight: bold; text-transform:uppercase;"
+        >Page 1</a></button>  
+    <button class="btn btn-info btn-sm" style="margin-left: 50px; margin-bottom: 50px; margin-top: 30px; background: linear-gradient(to right, rgb(0, 249, 216) 0%, rgb(24, 176, 247) 100%)">
+        <a href="/viewAll?page=2" 
+        style="text-decoration: none; color: rgb(132, 0, 255); font-size: 20px; font-weight: bold; text-transform:uppercase">
+        Page 2</a></button> 
+    <button class="btn btn-info btn-sm" style="margin-left: 50px; margin-bottom: 50px; margin-top: 30px; background: linear-gradient(to right, rgb(0, 249, 216) 0%, rgb(24, 176, 247) 100%)">
+        <a href="/viewAll" 
+        style="text-decoration: none;color:rgb(132, 0, 255); font-size: 20px; font-weight: bold; text-transform:uppercase">
+        All</a></button>
 </body>
 </html>

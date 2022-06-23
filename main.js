@@ -1,11 +1,18 @@
 var express = require('express')
+const async = require('hbs/lib/async')
+const mongo = require('mongodb');
+const { ObjectId } = require('mongodb')
+
+
 var app = express()
 
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({extended:true}))
 
 var MongoClient = require('mongodb').MongoClient
-var url = 'mongodb://leduchuy227:leduchuy227@ac-uijn7xw-shard-00-00.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-01.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-02.q7dpd26.mongodb.net:27017/test?replicaSet=atlas-hoj30z-shard-0&ssl=true&authSource=admin'
+// var url = 'mongodb://localhost:27017'
+
+var url = 'mongodb://leduchuy2207:leduchuy2002@ac-uijn7xw-shard-00-00.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-01.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-02.q7dpd26.mongodb.net:27017/test?replicaSet=atlas-hoj30z-shard-0&ssl=true&authSource=admin'
 
 app.get('/', (req,res) =>{
     res.render('home')
@@ -16,9 +23,44 @@ app.post('/search',async (req,res)=>{
 
     let server = await MongoClient.connect(url)
 
-    let dbo = server.db("ATNTOYS")
+    let dbo = server.db("ATNTOY")
    
-    let products = await dbo.collection('TOYS').find({'name': new RegExp(name,'i')}).toArray()
+    let products = await dbo.collection('TOY').find({$or:[{'name': new RegExp(name,'i')},{'_id': mongo.ObjectId(name)}]}).toArray()
+    res.render('AllProduct',{'products':products})
+})
+
+app.post('/sortName', async(req,res)=>{
+    let name = req.body.txtName
+
+    let server = await MongoClient.connect(url)
+
+    let dbo = server.db("ATNTOY")
+    
+    let products = await dbo.collection('TOY').find({'name': new RegExp(name,'i')}).sort({'name':1}).toArray()
+    res.render('AllProduct',{'products':products})
+})
+
+app.post('/ascending', async(req,res)=>{
+    let sortPrice = req.body.txtPrice
+
+    let server = await MongoClient.connect(url)
+
+    let dbo = server.db("ATNTOY")
+
+    let products = await dbo.collection('TOY').find({'name': new RegExp(sortPrice,'i')}).sort({'price':1}).toArray()
+
+    res.render('AllProduct',{'products':products})
+})
+
+app.post('/decrease', async(req,res)=>{
+    let sortPrice = req.body.txtPrice
+
+    let server = await MongoClient.connect(url)
+
+    let dbo = server.db("ATNTOY")
+
+    let products = await dbo.collection('TOY').find({'name': new RegExp(sortPrice, 'i')}).sort({'price':-1}).toArray()
+
     res.render('AllProduct',{'products':products})
 })
 
@@ -39,9 +81,9 @@ app.post('/NewProduct',async (req,res)=>{
     //1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
     //2.truy cap database ATNToys
-    let dbo = client.db("ATNTOYS");
+    let dbo = client.db("ATNTOY");
     //3.insert product vao database ATNToys, trong table product
-    await dbo.collection("TOYS").insertOne(product);
+    await dbo.collection("TOY").insertOne(product);
     //goi lai trang home
     if (product == null) {
         res.render('/')
@@ -50,14 +92,38 @@ app.post('/NewProduct',async (req,res)=>{
 })
 
 app.get('/viewAll',async (req,res)=>{
-    //1.ket noi den database server voi dia chi la url
+    var page = req.query.page
+
+    // 1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
     //2.truy cap database ATNToys
-    let dbo = client.db("ATNTOYS");
-    //tra ve toan bo bang product
-    let products = await dbo.collection("TOYS").find().toArray()
+    let dbo = client.db("ATNTOY");
+    // tra ve toan bo bang product
+    if (page == 1) {
+        let products = await dbo.collection("TOY").find().limit(5).toArray()
+        res.render('AllProduct',{'products':products})
+    } else if (page == 2) {
+        let products = await dbo.collection("TOY").find().skip(5).limit(5).toArray()
+        res.render('AllProduct',{'products':products})
+    } else {
+        let products = await dbo.collection("TOY").find().toArray()
+        res.render('AllProduct',{'products':products})
+    }
     //hien thi trang viewProduct voi Product trong Database tra ve
-    res.render('AllProduct',{'products':products})
+    
+})
+
+app.get('/delete',async(req,res)=>{
+    let id = mongo.ObjectId(req.query.id); 
+    const client = await MongoClient.connect(url);
+    let dbo = client.db("ATNTOY");
+    // const dbo = client.dbo('ATNTOY');
+    let collection = dbo.collection('TOY')
+    
+    let products = await collection.deleteOne({'_id' : id});
+    // let products = await dbo.collection("TOY").deleteOne({'_id': id})  
+    // res.render('AllProduct',{'products':products})
+    res.redirect('/viewAll')
 })
 
 app.get('/create',(req,res)=>{
