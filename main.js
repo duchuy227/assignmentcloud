@@ -21,14 +21,26 @@ app.get('/', (req,res) =>{
 })
 
 app.get('/homepage', async(req,res)=>{
+    var page = req.query.page
     
     //1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
     //2.truy cap database ATNToys
     let dbo = client.db("ATNTOY");
-    //3.insert product vao database ATNToys, trong table product
-    let products = await dbo.collection("TOY").find().toArray()
-    res.render('homepage', {'products': products})
+
+    if (page == 1) {
+        let products = await dbo.collection("TOY").find().limit(4).toArray()
+        res.render('homepage', {'products': products})
+    } else if (page == 2) {
+        let products = await dbo.collection("TOY").find().skip(4).limit(4).toArray()
+        res.render('homepage', {'products': products})
+    } else if (page == 3) {
+        let products = await dbo.collection("TOY").find().skip(8).limit(4).toArray()
+        res.render('homepage', {'products': products})
+    } else {
+        let products = await dbo.collection("TOY").find().toArray()
+        res.render('homepage', {'products': products})
+    }  
 })
 
 app.post('/search',async (req,res)=>{

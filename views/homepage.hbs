@@ -152,6 +152,41 @@
       transform: translateY(0);
       opacity: 1;
     }
+
+  .page {
+  width: 500px;
+  margin-bottom: 40px;
+  text-align: center;
+  margin-left: 500px;
+}
+  .pagination {
+    width: 400px;
+    margin-left: 50px;
+    font-size: 25px;
+  }
+  .pagination a {
+    display: block;
+    font-size: 25px;
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+  }
+  
+  .pagination a.active {
+      background-color: #4CAF50;
+      color: white;
+  }
+
+  .pagination a:hover.active {
+      background-color: #4CAF50;
+      color: white;
+  }
+  
+  .pagination a:hover:not(.active) {
+    background-color: #ddd;
+  }
 </style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light py-3 fixed-top">
@@ -219,6 +254,17 @@
       </div>
     </section>
 
+  <div class="page">
+		 <div class="pagination">
+      <a type="button" class="btn btn-secondary" href="/homepage">ALL</a>
+		   <a href="#">&laquo;</a>
+		   <a href="/homepage?page=1">1</a>
+		   <a  href="/homepage?page=2">2</a>
+		   <a  href="/homepage?page=3">3</a>
+		   <a href="#">&raquo;</a>
+		 </div>
+	</div>
+
     <footer class="text-center text-lg-start text-muted" style="background-color: #778899;">
     <!-- Section: Social media -->
     <section
@@ -234,13 +280,13 @@
         <div>
             <a href="https://www.facebook.com/">
             <button type="button" class="btn btn-primary">
-                <i class="fab fa-facebook"><b> Facebook</b></i>
+                <i class="fas fa-facebook"><b> Facebook</b></i>
             </button>
             </a>
 
             <a href="https://github.com/duchuy2278/assignmentcloud">
                 <button type="button" class="btn btn-success">
-                    <i class="fab fa-github"><b> Github</b></i>
+                    <i class="fas fa-github"><b> Github</b></i>
                 </button>
             </a>
 
