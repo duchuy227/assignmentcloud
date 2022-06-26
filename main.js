@@ -20,6 +20,17 @@ app.get('/', (req,res) =>{
     res.render('home')
 })
 
+app.get('/homepage', async(req,res)=>{
+    
+    //1.ket noi den database server voi dia chi la url
+    let client= await MongoClient.connect(url);
+    //2.truy cap database ATNToys
+    let dbo = client.db("ATNTOY");
+    //3.insert product vao database ATNToys, trong table product
+    let products = await dbo.collection("TOY").find().toArray()
+    res.render('homepage', {'products': products})
+})
+
 app.post('/search',async (req,res)=>{
     let name = req.body.txtName
 
