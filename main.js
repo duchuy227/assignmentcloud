@@ -1,33 +1,25 @@
 var express = require('express');
-
 const async = require('hbs/lib/async')
 const mongo = require('mongodb');
 const { ObjectId } = require('mongodb')
-
-
-
 var app = express()
 
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({extended:true}))
 
 var MongoClient = require('mongodb').MongoClient
-// var url = 'mongodb://localhost:27017'
-
 var url = 'mongodb://leduchuy2207:leduchuy2002@ac-uijn7xw-shard-00-00.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-01.q7dpd26.mongodb.net:27017,ac-uijn7xw-shard-00-02.q7dpd26.mongodb.net:27017/test?replicaSet=atlas-hoj30z-shard-0&ssl=true&authSource=admin'
 
+// Index page
 app.get('/', (req,res) =>{
     res.render('home')
 })
 
+// Home page
 app.get('/homepage', async(req,res)=>{
     var page = req.query.page
-    
-    //1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
-    //2.truy cap database ATNToys
     let dbo = client.db("ATNTOY");
-
     if (page == 1) {
         let products = await dbo.collection("TOY").find().limit(4).toArray()
         res.render('homepage', {'products': products})
@@ -43,6 +35,7 @@ app.get('/homepage', async(req,res)=>{
     }  
 })
 
+// Search
 app.post('/search',async (req,res)=>{
     let name = req.body.txtName
 
@@ -54,6 +47,7 @@ app.post('/search',async (req,res)=>{
     res.render('AllProduct',{'products':products})
 })
 
+// Sort name
 app.post('/sortName', async(req,res)=>{
     let name = req.body.txtName
 
@@ -65,6 +59,7 @@ app.post('/sortName', async(req,res)=>{
     res.render('AllProduct',{'products':products})
 })
 
+// Sort price
 app.post('/ascending', async(req,res)=>{
     let sortPrice = req.body.txtPrice
 
@@ -89,6 +84,11 @@ app.post('/decrease', async(req,res)=>{
     res.render('AllProduct',{'products':products})
 })
 
+// New Product
+app.get('/create',(req,res)=>{
+    res.render('NewProduct')
+})
+
 app.post('/NewProduct',async (req,res)=>{
     let name = req.body.txtName
     let price =req.body.txtPrice
@@ -102,28 +102,20 @@ app.post('/NewProduct',async (req,res)=>{
         'description': description,
         'amount': amount
     }
-    //insert product vao database
-    //1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
-    //2.truy cap database ATNToys
     let dbo = client.db("ATNTOY");
-    //3.insert product vao database ATNToys, trong table product
     await dbo.collection("TOY").insertOne(product);
-    //goi lai trang home
     if (product == null) {
         res.render('/')
     }
     res.redirect('/viewAll')
 })
 
+// All product
 app.get('/viewAll',async (req,res)=>{
     var page = req.query.page
-
-    // 1.ket noi den database server voi dia chi la url
     let client= await MongoClient.connect(url);
-    //2.truy cap database ATNToys
     let dbo = client.db("ATNTOY");
-    // tra ve toan bo bang product
     if (page == 1) {
         let products = await dbo.collection("TOY").find().limit(5).toArray()
         res.render('AllProduct',{'products':products})
@@ -134,10 +126,9 @@ app.get('/viewAll',async (req,res)=>{
         let products = await dbo.collection("TOY").find().toArray()
         res.render('AllProduct',{'products':products})
     }
-    //hien thi trang viewProduct voi Product trong Database tra ve
-    
 })
 
+// Update
 app.get('/update',async(req,res)=>{
     let id = req.query.id;
     const client = await MongoClient.connect(url)
@@ -146,7 +137,6 @@ app.get('/update',async(req,res)=>{
     res.render('update', {'products': products})
 
 })
-
 app.post('/updateProduct', async(req,res)=>{
     let id = req.body._id;
     let name = req.body.txtName
@@ -154,10 +144,8 @@ app.post('/updateProduct', async(req,res)=>{
     let picURL = req.body.txtPicture
     let description = req.body.txtDescription
     let amount = req.body.txtAmount
-
     let client = await MongoClient.connect(url)
     let dbo = client.db("ATNTOY")
-
     console.log(id)
     await dbo.collection("TOY").updateOne({_id: ObjectId(id)}, {
         $set: {
@@ -171,21 +159,14 @@ app.post('/updateProduct', async(req,res)=>{
     res.redirect('/viewAll')
 })
 
+// Delete 
 app.get('/delete',async(req,res)=>{
     let id = mongo.ObjectId(req.query.id); 
     const client = await MongoClient.connect(url);
     let dbo = client.db("ATNTOY");
-    // const dbo = client.dbo('ATNTOY');
-    let collection = dbo.collection('TOY')
-    
+    let collection = dbo.collection('TOY')  
     let products = await collection.deleteOne({'_id' : id});
-    // let products = await dbo.collection("TOY").deleteOne({'_id': id})  
-    // res.render('AllProduct',{'products':products})
     res.redirect('/viewAll')
-})
-
-app.get('/create',(req,res)=>{
-    res.render('NewProduct')
 })
 
 const PORT = process.env.PORT || 8000
