@@ -43,7 +43,9 @@ app.post('/search',async (req,res)=>{
 
     let dbo = server.db("ATNTOY")
    
-    let products = await dbo.collection('TOY').find({$or:[{'name': new RegExp(name,'i')},{'price': new RegExp(name)}]}).toArray() //{'_id': ObjectId(name) : tim theo id 
+    let products = await dbo.collection('TOY').find({$or:[{'name': new RegExp(name,'i')},
+    {'price': new RegExp(name)}]}).toArray() 
+    //{'_id': ObjectId(name) : tim theo id 
     res.render('AllProduct',{'products':products})
 })
 
